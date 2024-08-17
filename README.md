@@ -35,7 +35,7 @@ $ yarn install
 ## .env
 
 ```bash
-$ DATABASE_URL="file:./dev.db"
+DATABASE_URL="file:./dev.db"
 ```
 
 ## Running the app
