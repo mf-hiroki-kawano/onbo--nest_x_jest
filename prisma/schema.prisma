@@ -14,17 +14,42 @@ datasource db {
 }
 
 model User {
-  id    Int     @default(autoincrement()) @id
+  id    String  @default(uuid()) @id
   email String  @unique
   name  String?
-  posts Post[]
+  UserPostMapping UserPostMapping[]
 }
 
 model Post {
-  id        Int      @default(autoincrement()) @id
+  id        String   @default(uuid()) @id
   title     String
   content   String?
   published Boolean? @default(false)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+  UserPostMapping UserPostMapping[]
+  PostTagMapping PostTagMapping[]
+}
+
+model Tag {
+  id        String   @unique @id
+  tagName   String   @unique
+  color     String
+  PostTagMapping PostTagMapping[]
+}
+
+model UserPostMapping {
+  userId String
+  postId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  @@id([userId, postId])
+  @@map("mst_user_post_mapping")
+}
+
+model PostTagMapping {
+  postId String
+  tagtId String
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag Tag   @relation(fields: [tagtId], references: [id], onDelete: Cascade)
+  @@id([postId, tagtId])
+  @@map("mst_post_tag_mapping")
 }
